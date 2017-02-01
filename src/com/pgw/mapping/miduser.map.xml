@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.mapper.miduser">
-  <select id="findById" resultType="com.pgw.pojo.MidUser" parameterType="java.lang.String">
+  <select id="findById" resultType="MidUser" parameterType="java.lang.String">
     select * from miduser where usercode = #{usercode}
   </select>
+  
+  <insert id="insertMidUser" parameterType="MidUser" statementType="PREPARED">
+  	insert into miduser(UserCode,UserName,ComCode,Password) values(#{usercode},#{username},#{comcode},#{password})
+  </insert>
+  
+  <update id="updateMidUser" parameterType="MidUser" statementType="PREPARED">
+  	update miduser 
+  	set username=#{username,jdbcType=VARCHAR}, comcode=#{comcode,jdbcType=VARCHAR}, password=#{password,jdbcType=VARCHAR} 
+  	where usercode=#{usercode,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deleteMidUser" parameterType="MidUser" statementType="PREPARED">
+  	delete from miduser where usercode=#{usercode,jdbcType=VARCHAR} 
+  </delete>
 </mapper>
