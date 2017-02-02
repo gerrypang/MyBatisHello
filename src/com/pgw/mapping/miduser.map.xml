@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.mapper.miduser">
+  <!-- 自定义resultmap类型 -->
+  <resultMap type="MidUser" id="MidUserMap">
+  	<id property="usercode" column="usercode"/>
+  	<result property="usercode" column="usercode"/>
+  	<result property="username" column="username"/>
+  	<result property="password" column="password"/>
+  </resultMap>
+
+  <!-- 测试事务 -->
+  <insert id="insertMidUserBuses" parameterType="MidUserBuss" statementType="PREPARED">
+  	insert into miduserbuss (usercode, taskcode, flag) values(#{miduser.usercode}, #{taskcode}, #{flag})
+  </insert>
+
+  <!-- resultmap解决复杂的查询时映射问题 -->
+  <!-- 返回多行记录时，自动封装成自定义resultMap -->
+  <select id="findAllByMap" resultMap="MidUserMap" >
+    select usercode, username, password from miduser
+  </select>
+
+  <!-- 返回多行记录时，自动封装成list -->
+  <select id="findAll" resultType="MidUser" >
+    select * from miduser
+  </select>
+
   <select id="findById" resultType="MidUser" parameterType="java.lang.String">
     select * from miduser where usercode = #{usercode}
   </select>
@@ -11,7 +35,7 @@
   </select>
   
   <!-- resultmap is object  -->
-  <select id="findByMap" resultType="MidUser" parameterType="HashMap">
+  <select id="findByObject" resultType="MidUser" parameterType="MidUser">
   	select * from miduser where usercode = #{usercode} and password=#{password}
   </select>
   

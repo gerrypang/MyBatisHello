@@ -4,10 +4,12 @@
 
  <typeAliases>
  	<typeAlias alias="MidUser" type="com.pgw.pojo.MidUser" />
+ 	<typeAlias alias="MidUserBuss" type="com.pgw.pojo.MidUserBuss" />
  </typeAliases>
 
   <environments default="development">
     <environment id="development">
+      <!-- mybaits中的事务处理配置 -->
       <transactionManager type="JDBC"/>
       <dataSource type="POOLED">
         <property name="driver" value="com.mysql.jdbc.Driver"/>
