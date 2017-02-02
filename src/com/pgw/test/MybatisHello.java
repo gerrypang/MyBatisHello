@@ -14,8 +14,8 @@ import com.pgw.pojo.MidUser;
 public class MybatisHello {
 	
 	public static void main(String[] args) {
-		selectByMap();
-		//selectOne();
+		//selectByMap();
+		selectOne();
 		//insertOne();
 		//updateOne();
 		//deleteOne();
@@ -75,6 +75,27 @@ public class MybatisHello {
 			midUser.setPassword("123456");
 			sqlSession.insert("insertMidUser", midUser);
 			sqlSession.commit();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public static void selectByObject(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			MidUser midUser = new MidUser();
+			midUser.setUsercode("pgw");
+			midUser.setPassword("123456");
+			sqlSession.insert("insertMidUser", midUser);
+			MidUser miduser = sqlSession.selectOne("findByMap",midUser);
+			System.out.println(miduser.getUsername());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
