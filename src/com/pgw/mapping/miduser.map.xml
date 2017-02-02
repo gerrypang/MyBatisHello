@@ -5,6 +5,11 @@
     select * from miduser where usercode = #{usercode}
   </select>
   
+  <!-- resultmap is hashmap  -->
+  <select id="findByMap" resultType="MidUser" parameterType="HashMap">
+  	select * from miduser where usercode = #{usercode} and password=#{password}
+  </select>
+  
   <insert id="insertMidUser" parameterType="MidUser" statementType="PREPARED">
   	insert into miduser(UserCode,UserName,ComCode,Password) values(#{usercode},#{username},#{comcode},#{password})
   </insert>
@@ -18,4 +23,6 @@
   <delete id="deleteMidUser" parameterType="MidUser" statementType="PREPARED">
   	delete from miduser where usercode=#{usercode,jdbcType=VARCHAR} 
   </delete>
+  
+  
 </mapper>
