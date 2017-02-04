@@ -7,6 +7,16 @@ public class MidUserBuss {
 	private String remark;
 	private String flag;
 
+	public MidUserBuss() {
+		super();
+	}
+	
+	public MidUserBuss(String usercode, String taskcode) {
+		super();
+		this.usercode = usercode;
+		this.taskcode = taskcode;
+	}
+
 	public String getUsercode() {
 		return usercode;
 	}

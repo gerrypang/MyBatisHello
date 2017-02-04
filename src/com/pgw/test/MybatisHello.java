@@ -16,7 +16,8 @@ import com.pgw.pojo.MidUserBuss;
 public class MybatisHello {
 	
 	public static void main(String[] args) {
-		testAssociation();
+		testSubSelect();
+		//testAssociation();
 		//testTransation();
 		//selectAllByMap();
 		//selectAll();
@@ -26,6 +27,31 @@ public class MybatisHello {
 		//insertOne();
 		//updateOne();
 		//deleteOne();
+	}
+	
+	/**
+	 * resultMap 中 子查询练习
+	 */
+	public static void testSubSelect() {
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			List<MidUserBuss> midUserBuss = sqlSession.selectList("SubSelectBussAll");
+			for (MidUserBuss mub : midUserBuss) {
+				System.out.println(mub.getTaskcode());
+				System.out.println("open lazy load ... ");
+				// 懒加载机制开启后生效
+				System.err.println(mub.getMiduser().getUsername()+":"+ mub.getMiduser().getPassword());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
 	}
 	
 	/**

@@ -8,9 +8,14 @@
   	<result property="username" column="username"/>
   	<result property="password" column="password"/>
   </resultMap>
-
- <!-- 自定义resultmap类型 association -->
+  
+  <!-- 自定义resultmap类型 association -->
   <resultMap type="MidUserBuss" id="MidUserBussMap">
+  <!-- 构造方法 -->
+<!--   	<constructor> -->
+<!-- 		<arg column="taskcode" javaType="String"/> -->
+<!-- 		<arg column="usercode" javaType="String"/> -->
+<!--   	</constructor> -->
   	<id property="taskcode" column="taskcode"/>
   	<result property="remark" column="remark"/>
   	<result property="flag" column="flag"/>
@@ -21,6 +26,16 @@
   		<result property="password" column="password"/>
   	</association>
   </resultMap>
+
+  <!-- 子查询关联map -->
+  <resultMap type="MidUserBuss" id="subSelectMap">
+  	<association property="miduser" column="usercode" javaType="MidUser" select="findById"/>
+  </resultMap>
+	
+  <!-- 子查询关联subSelectMap -->
+  <select id="SubSelectBussAll" resultMap="subSelectMap">
+    select * from miduserbuss
+  </select>
 
   <!-- resultmap解决复杂的查询时映射问题 -->
   <!-- 返回多行记录时，自动封装成自定义resultMap -->
