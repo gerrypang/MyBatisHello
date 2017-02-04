@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-
+ 
+ <!-- 别名，注意要在写在environments的上面 -->
  <typeAliases>
  	<typeAlias alias="MidUser" type="com.pgw.pojo.MidUser" />
  	<typeAlias alias="MidUserBuss" type="com.pgw.pojo.MidUserBuss" />

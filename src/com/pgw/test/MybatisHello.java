@@ -16,7 +16,8 @@ import com.pgw.pojo.MidUserBuss;
 public class MybatisHello {
 	
 	public static void main(String[] args) {
-		testTransation();
+		testAssociation();
+		//testTransation();
 		//selectAllByMap();
 		//selectAll();
 		//selectByMap();
@@ -26,6 +27,29 @@ public class MybatisHello {
 		//updateOne();
 		//deleteOne();
 	}
+	
+	/**
+	 * resultMap 中 association属性练习
+	 */
+	public static void testAssociation() {
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			List<MidUserBuss> midUserBuss = sqlSession.selectList("findAllByAssociation");
+			for (MidUserBuss mub : midUserBuss) {
+				System.out.println(mub.getMiduser().getUsername()+":"+ mub.getTaskcode());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
 	
 	/**
 	 * 练习事务管理
