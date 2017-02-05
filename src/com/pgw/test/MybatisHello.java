@@ -2,6 +2,7 @@ package com.pgw.test;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,7 +17,11 @@ import com.pgw.pojo.MidUserBuss;
 public class MybatisHello {
 	
 	public static void main(String[] args) {
-		selectCollection();
+		selectIn();
+		//selectWhere();
+		//selectChoose();
+		//selectIf();
+		//selectCollection();
 		//testSubSelect();
 		//testAssociation();
 		//testTransation();
@@ -28,6 +33,166 @@ public class MybatisHello {
 		//insertOne();
 		//updateOne();
 		//deleteOne();
+		//updateSet();
+		//updateTrim();
+	}
+	
+	/**
+	 * 查询结果集Where
+	 */
+	public static void selectIn(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			List<MidUser> midUsers = new ArrayList<MidUser>();
+			MidUser miduser1 = new MidUser();
+			miduser1.setUsercode("admin");
+			MidUser miduser2 = new MidUser();
+			miduser2.setUsercode("pgw");
+			midUsers.add(miduser1);
+			midUsers.add(miduser2);
+			// 注意：这里是selectList
+			List<MidUser> midusers = sqlSession.selectList("selectIn", midUsers);
+			for (int i = 0; i < midusers.size(); i++) {
+				System.out.println(midusers.get(i).getUsername());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	/**
+	 * trim标签
+	 */
+	public static void updateTrim(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			MidUser midUser = new MidUser();
+			midUser.setUsercode("pgw");
+			//midUser.setUsername("pangwei");
+			//midUser.setComcode("0080000");
+			midUser.setPassword("999777");
+			sqlSession.update("updateTrim", midUser);
+			sqlSession.commit();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	/**
+	 * update中set标签
+	 */
+	public static void updateSet(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			MidUser midUser = new MidUser();
+			midUser.setUsercode("pgw");
+			midUser.setUsername("pangwei");
+			midUser.setComcode("0080000");
+			midUser.setPassword("999777");
+			sqlSession.update("updateSet", midUser);
+			sqlSession.commit();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	/**
+	 * 查询结果集Where
+	 */
+	public static void selectWhere(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			MidUser miduser = new MidUser();
+			miduser.setUsercode("admin");
+			miduser.setPassword("202cb962ac59075b964b07152d234b70");
+			// 注意：这里是selectList
+			List<MidUser> midusers = sqlSession.selectList("selectWhere", miduser);
+			for (int i = 0; i < midusers.size(); i++) {
+				System.out.println(midusers.get(i).getUsername());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	/**
+	 * 查询结果集choose
+	 */
+	public static void selectChoose(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			MidUser miduser = new MidUser();
+			//miduser.setUsercode("admin");
+			//miduser.setPassword("202cb962ac59075b964b07152d234b70");
+			// 注意：这里是selectList
+			List<MidUser> midusers = sqlSession.selectList("selectChoose", miduser);
+			for (int i = 0; i < midusers.size(); i++) {
+				System.out.println(midusers.get(i).getUsername());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	/**
+	 * 查询结果集if
+	 */
+	public static void selectIf(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			MidUser miduser = new MidUser();
+			miduser.setUsercode("admin");
+			miduser.setPassword("202cb962ac59075b964b07152d234b70");
+			// 注意：这里是selectList
+			List<MidUser> midusers = sqlSession.selectList("selectIf", miduser);
+			for (int i = 0; i < midusers.size(); i++) {
+				System.out.println(midusers.get(i).getUsername());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
 	}
 	
 	/**

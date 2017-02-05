@@ -119,5 +119,59 @@
 		delete from miduser where usercode=#{usercode,jdbcType=VARCHAR}
 	</delete>
 
-
+	<!-- 条件判断if -->
+	<select id="selectIf" resultType="MidUser">
+		select * from miduser where 1=1
+		<if test="usercode!=null">and usercode=#{usercode}</if>
+		<if test="password!=null">and password=#{password}</if>
+	</select>
+	
+	<!-- choose多选1 -->
+	<select id="selectChoose" resultType="MidUser">
+		select * from miduser where 1=1
+		<choose>
+			<when test="usercode!=null">and usercode=#{usercode}</when>
+			<when test="password!=null">and password=#{password}</when>
+			<otherwise>and validStatus='1'</otherwise>
+		</choose>
+	</select>
+	
+	<!-- where智能判断 -->
+	<select id="selectWhere" resultType="MidUser">
+		select * from miduser
+		<where>
+			<if test="usercode!=null">and usercode=#{usercode}</if>
+			<if test="password!=null">and password=#{password}</if>
+		</where>
+	</select> 
+	
+	<!-- update中set标签 -->
+	<update id="updateSet" parameterType="String" statementType="PREPARED">
+		update miduser 
+		<set>
+			<if test="comcode != null"> ComCode=#{comcode}, </if>
+			<if test="password != null"> password=#{password}, </if>
+		</set>
+		where usercode=#{usercode}
+	</update>
+	
+	<!-- trim智能判断 -->
+	<update id="updateTrim" parameterType="String" statementType="PREPARED">
+		update miduser 
+		<trim prefix="set" suffix="where usercode=#{usercode}" suffixOverrides=",">
+			<if test="comcode != null"> ComCode=#{comcode}, </if>
+			<if test="password != null"> password=#{password}, </if>
+		</trim>
+	</update>
+	
+	<select id="selectIn" resultType="MidUser" parameterType="list" >
+		select * from miduser 
+		<where>
+			usercode in
+			<foreach collection="list" index="i" open="(" item="one" separator="," close=")">
+				<!-- 对象的属性 -->
+				#{one.usercode}
+			</foreach>		
+		</where>
+	</select>
 </mapper>
