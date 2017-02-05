@@ -16,7 +16,8 @@ import com.pgw.pojo.MidUserBuss;
 public class MybatisHello {
 	
 	public static void main(String[] args) {
-		testSubSelect();
+		selectCollection();
+		//testSubSelect();
 		//testAssociation();
 		//testTransation();
 		//selectAllByMap();
@@ -27,6 +28,32 @@ public class MybatisHello {
 		//insertOne();
 		//updateOne();
 		//deleteOne();
+	}
+	
+	/**
+	 * 查询结果集
+	 */
+	public static void selectCollection(){
+		String resource = "mybatis-config.xml";
+		InputStream inputStream = null;
+		SqlSession sqlSession = null;
+		try {
+			inputStream = Resources.getResourceAsStream(resource);
+			SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+			sqlSession = sqlSessionFactory.openSession();
+			// 注意：这里是selectList
+			List<MidUser> midusers = sqlSession.selectList("findAllCollection");
+			for (int i = 0; i < midusers.size(); i++) {
+				System.out.println(midusers.get(i).getUsercode()+":");
+				if(midusers.get(i).getMidUserBusses()!= null){
+					System.out.println(midusers.get(i).getMidUserBusses().size());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			sqlSession.close();
+		}
 	}
 	
 	/**
@@ -75,7 +102,6 @@ public class MybatisHello {
 			sqlSession.close();
 		}
 	}
-	
 	
 	/**
 	 * 练习事务管理

@@ -1,92 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.mapper.miduser">
-  <!-- 自定义resultmap类型 -->
-  <resultMap type="MidUser" id="MidUserMap">
-  	<id property="usercode" column="usercode"/>
-  	<result property="usercode" column="usercode"/>
-  	<result property="username" column="username"/>
-  	<result property="password" column="password"/>
-  </resultMap>
-  
-  <!-- 自定义resultmap类型 association -->
-  <resultMap type="MidUserBuss" id="MidUserBussMap">
-  <!-- 构造方法 -->
-<!--   	<constructor> -->
-<!-- 		<arg column="taskcode" javaType="String"/> -->
-<!-- 		<arg column="usercode" javaType="String"/> -->
-<!--   	</constructor> -->
-  	<id property="taskcode" column="taskcode"/>
-  	<result property="remark" column="remark"/>
-  	<result property="flag" column="flag"/>
-  	<association property="miduser" column="miduser.usercode" javaType="MidUser">
-  		<id property="usercode" column="usercode"/>
-  		<result property="usercode" column="usercode"/>
-  		<result property="username" column="username"/>
-  		<result property="password" column="password"/>
-  	</association>
-  </resultMap>
+	<!-- 自定义resultmap类型 -->
+	<resultMap type="MidUser" id="MidUserMap">
+		<id property="usercode" column="usercode" />
+		<result property="usercode" column="usercode" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+	</resultMap>
 
-  <!-- 子查询关联map -->
-  <resultMap type="MidUserBuss" id="subSelectMap">
-  	<association property="miduser" column="usercode" javaType="MidUser" select="findById"/>
-  </resultMap>
-	
-  <!-- 子查询关联subSelectMap -->
-  <select id="SubSelectBussAll" resultMap="subSelectMap">
-    select * from miduserbuss
-  </select>
+	<!-- 自定义resultmap类型 association -->
+	<resultMap type="MidUserBuss" id="MidUserBussMap">
+		<!-- 构造方法 -->
+		<!-- <constructor> -->
+		<!-- <arg column="taskcode" javaType="String"/> -->
+		<!-- <arg column="usercode" javaType="String"/> -->
+		<!-- </constructor> -->
+		<id property="taskcode" column="taskcode" />
+		<result property="remark" column="remark" />
+		<result property="flag" column="flag" />
+		<association property="miduser" column="miduser.usercode" javaType="MidUser">
+			<id property="usercode" column="usercode" />
+			<result property="usercode" column="usercode" />
+			<result property="username" column="username" />
+			<result property="password" column="password" />
+		</association>
+	</resultMap>
 
-  <!-- resultmap解决复杂的查询时映射问题 -->
-  <!-- 返回多行记录时，自动封装成自定义resultMap -->
-  <select id="findAllByAssociation" resultMap="MidUserBussMap" >
-    select * from miduserbuss b inner join miduser u on b.usercode=u.usercode 
-  </select>
+	<resultMap type="MidUser" id="MidUserMapCols">
+		<id property="usercode" column="usercode" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<collection property="midUserBusses" column="usercode" javaType="ArrayList" ofType="MidUserBuss" select="SubSelectBuss">
+			<id property="taskcode" column="taskcode" />
+			<result property="remark" column="remark" />
+			<result property="flag" column="flag" />
+		</collection>
+	</resultMap>
+
+	<!-- 返回多行记录时，自动封装成list -->
+	<select id="findAllCollection" resultMap="MidUserMapCols">
+		select * from miduser
+	</select>
+
+	<!-- 子查询关联subSelectMap -->
+	<select id="SubSelectBuss" resultType="MidUserBuss" parameterType="String">
+		select * from miduserbuss where usercode=#{usercode}
+	</select>
+
+	<!-- 子查询关联map -->
+	<resultMap type="MidUserBuss" id="subSelectMap">
+		<association property="miduser" column="usercode" javaType="MidUser" select="findById" />
+	</resultMap>
+
+	<!-- 子查询关联subSelectMap -->
+	<select id="SubSelectBussAll" resultMap="subSelectMap">
+		select * from miduserbuss
+	</select>
+
+	<!-- resultmap解决复杂的查询时映射问题 -->
+	<!-- 返回多行记录时，自动封装成自定义resultMap -->
+	<select id="findAllByAssociation" resultMap="MidUserBussMap">
+		select * from miduserbuss b inner join miduser u on
+		b.usercode=u.usercode
+	</select>
+
+	<!-- 测试事务 -->
+	<insert id="insertMidUserBuses" parameterType="MidUserBuss"
+		statementType="PREPARED">
+		insert into miduserbuss (usercode, taskcode, flag)
+		values(#{miduser.usercode}, #{taskcode}, #{flag})
+	</insert>
+
+	<!-- resultmap解决复杂的查询时映射问题 -->
+	<!-- 返回多行记录时，自动封装成自定义resultMap -->
+	<select id="findAllByMap" resultMap="MidUserMap">
+		select usercode, username, password from miduser
+	</select>
+
+	<!-- 返回多行记录时，自动封装成list -->
+	<select id="findAll" resultType="MidUser">
+		select * from miduser
+	</select>
+
+	<select id="findById" resultType="MidUser" parameterType="java.lang.String">
+		select * from miduser where usercode = #{usercode}
+	</select>
+
+	<!-- resultmap is hashmap -->
+	<select id="findByMap" resultType="MidUser" parameterType="HashMap">
+		select * from miduser where usercode = #{usercode} and
+		password=#{password}
+	</select>
+
+	<!-- resultmap is object -->
+	<select id="findByObject" resultType="MidUser" parameterType="MidUser">
+		select * from miduser where usercode = #{usercode} and
+		password=#{password}
+	</select>
+
+	<insert id="insertMidUser" parameterType="MidUser"
+		statementType="PREPARED">
+		insert into miduser(UserCode,UserName,ComCode,Password)
+		values(#{usercode},#{username},#{comcode},#{password})
+	</insert>
+
+	<update id="updateMidUser" parameterType="MidUser"
+		statementType="PREPARED">
+		update miduser
+		set username=#{username,jdbcType=VARCHAR},
+		comcode=#{comcode,jdbcType=VARCHAR},
+		password=#{password,jdbcType=VARCHAR}
+		where usercode=#{usercode,jdbcType=VARCHAR}
+	</update>
+
+	<delete id="deleteMidUser" parameterType="MidUser"
+		statementType="PREPARED">
+		delete from miduser where usercode=#{usercode,jdbcType=VARCHAR}
+	</delete>
 
 
-  <!-- 测试事务 -->
-  <insert id="insertMidUserBuses" parameterType="MidUserBuss" statementType="PREPARED">
-  	insert into miduserbuss (usercode, taskcode, flag) values(#{miduser.usercode}, #{taskcode}, #{flag})
-  </insert>
-
-  <!-- resultmap解决复杂的查询时映射问题 -->
-  <!-- 返回多行记录时，自动封装成自定义resultMap -->
-  <select id="findAllByMap" resultMap="MidUserMap" >
-    select usercode, username, password from miduser
-  </select>
-
-  <!-- 返回多行记录时，自动封装成list -->
-  <select id="findAll" resultType="MidUser" >
-    select * from miduser
-  </select>
-
-  <select id="findById" resultType="MidUser" parameterType="java.lang.String" >
-    select * from miduser where usercode = #{usercode}
-  </select>
-  
-  <!-- resultmap is hashmap  -->
-  <select id="findByMap" resultType="MidUser" parameterType="HashMap">
-  	select * from miduser where usercode = #{usercode} and password=#{password}
-  </select>
-  
-  <!-- resultmap is object  -->
-  <select id="findByObject" resultType="MidUser" parameterType="MidUser">
-  	select * from miduser where usercode = #{usercode} and password=#{password}
-  </select>
-  
-  <insert id="insertMidUser" parameterType="MidUser" statementType="PREPARED">
-  	insert into miduser(UserCode,UserName,ComCode,Password) values(#{usercode},#{username},#{comcode},#{password})
-  </insert>
-  
-  <update id="updateMidUser" parameterType="MidUser" statementType="PREPARED">
-  	update miduser 
-  	set username=#{username,jdbcType=VARCHAR}, comcode=#{comcode,jdbcType=VARCHAR}, password=#{password,jdbcType=VARCHAR} 
-  	where usercode=#{usercode,jdbcType=VARCHAR}
-  </update>
-  
-  <delete id="deleteMidUser" parameterType="MidUser" statementType="PREPARED">
-  	delete from miduser where usercode=#{usercode,jdbcType=VARCHAR} 
-  </delete>
-  
-  
 </mapper>

@@ -1,9 +1,12 @@
 package com.pgw.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class MidUser {
-    private String usercode;
+	private List<MidUserBuss> midUserBusses = null;
+
+	private String usercode;
 
     private String username;
 
@@ -152,4 +155,12 @@ public class MidUser {
     public void setFlag(String flag) {
         this.flag = flag == null ? null : flag.trim();
     }
+
+	public List<MidUserBuss> getMidUserBusses() {
+		return midUserBusses;
+	}
+
+	public void setMidUserBusses(List<MidUserBuss> midUserBusses) {
+		this.midUserBusses = midUserBusses;
+	}
 }
